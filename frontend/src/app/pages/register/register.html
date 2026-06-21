@@ -1,0 +1,31 @@
+<main>
+  <h1>Inscription</h1>
+  <p>Creez un compte Lensrock pour reserver des services.</p>
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+
+    <label>
+      Nom complet
+      <input formControlName="fullName">
+    </label>
+
+    <label>
+      E-mail
+      <input type="email" formControlName="email">
+    </label>
+
+    <label>
+      Mot de passe
+      <input type="password" formControlName="password">
+    </label>
+
+    <button type="submit" [disabled]="form.invalid || loading()">
+      {{ loading() ? 'Creation...' : 'Creer mon compte' }}
+    </button>
+
+    <p>Deja inscrit ? <a routerLink="/connexion">Se connecter</a></p>
+  </form>
+</main>

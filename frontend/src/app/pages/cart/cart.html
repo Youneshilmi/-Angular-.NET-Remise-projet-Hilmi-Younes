@@ -1,0 +1,57 @@
+<main>
+  <h1>Panier</h1>
+
+  @if (error()) {
+    <div class="error-message">{{ error() }}</div>
+  }
+
+  @if (cart.items().length === 0) {
+    <section class="empty-state">
+      <h2>Votre panier est vide</h2>
+      <a class="button" routerLink="/">Retour au catalogue</a>
+    </section>
+  } @else {
+    <section class="checkout-layout">
+      <div class="panel">
+        <h2>Services selectionnes</h2>
+
+        @for (item of cart.items(); track item.id) {
+          <article class="cart-row">
+            <div>
+              <strong>{{ item.serviceName }}</strong>
+              <p>{{ item.durationMinutes }} minutes - {{ item.unitPrice }} euros</p>
+            </div>
+
+            <label>
+              Quantite
+              <select [value]="item.quantity" (change)="updateQuantity(item.serviceId, $event)">
+                @for (quantity of [1,2,3,4,5]; track quantity) {
+                  <option [value]="quantity">{{ quantity }}</option>
+                }
+              </select>
+            </label>
+
+            <strong>{{ item.lineTotal }} euros</strong>
+            <button type="button" (click)="remove(item.serviceId)">Supprimer</button>
+          </article>
+        }
+      </div>
+
+      <form class="panel" [formGroup]="form" (ngSubmit)="checkout()">
+        <h2>Reservation</h2>
+        <label>
+          Date souhaitee
+          <input type="date" formControlName="bookingDate" [min]="minDate">
+        </label>
+        <label>
+          Notes
+          <textarea formControlName="notes" rows="4"></textarea>
+        </label>
+        <p>Total : <strong>{{ cart.total() }} euros</strong></p>
+        <button type="submit" [disabled]="loading()">
+          {{ loading() ? 'Validation...' : 'Confirmer la reservation' }}
+        </button>
+      </form>
+    </section>
+  }
+</main>

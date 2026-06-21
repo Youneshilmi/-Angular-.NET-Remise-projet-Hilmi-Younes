@@ -1,0 +1,47 @@
+<main>
+  <h1>Catalogue Lensrock</h1>
+  <p>Choisissez un service puis ajoutez-le au panier.</p>
+
+  <form class="filter-bar" [formGroup]="filters" (ngSubmit)="load()">
+    <label>
+      Recherche
+      <input formControlName="search" placeholder="Exemple : photo, jardinage">
+    </label>
+
+    <label>
+      Categorie
+      <select formControlName="categoryId">
+        <option [ngValue]="0">Toutes les categories</option>
+        @for (category of categories(); track category.id) {
+          <option [ngValue]="category.id">{{ category.name }}</option>
+        }
+      </select>
+    </label>
+
+    <button type="submit">Filtrer</button>
+    <button class="button ghost" type="button" (click)="reset()">Reinitialiser</button>
+  </form>
+
+  @if (message()) {
+    <div class="notice">{{ message() }}</div>
+  }
+
+  @if (loading()) {
+    <div class="empty-state">Chargement du catalogue...</div>
+  } @else if (services().length === 0) {
+    <div class="empty-state">Aucun service trouve.</div>
+  } @else {
+    <section class="service-grid">
+      @for (service of services(); track service.id) {
+        <article class="service-card">
+          <h2>{{ service.name }}</h2>
+          <p>{{ service.description }}</p>
+          <p>Categorie : {{ service.categoryName }}</p>
+          <p>Duree : {{ service.durationMinutes }} minutes</p>
+          <p>Prix : {{ service.price }} euros</p>
+          <button type="button" (click)="addToCart(service)">Ajouter au panier</button>
+        </article>
+      }
+    </section>
+  }
+</main>

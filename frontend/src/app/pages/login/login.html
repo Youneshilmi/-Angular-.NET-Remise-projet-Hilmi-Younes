@@ -1,0 +1,27 @@
+<main>
+  <h1>Connexion</h1>
+  <p>Connectez-vous a Lensrock pour gerer votre panier et vos commandes.</p>
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    @if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    }
+
+    <label>
+      E-mail
+      <input type="email" formControlName="email" placeholder="client@lensrock.be">
+    </label>
+
+    <label>
+      Mot de passe
+      <input type="password" formControlName="password">
+    </label>
+
+    <button type="submit" [disabled]="form.invalid || loading()">
+      {{ loading() ? 'Connexion...' : 'Se connecter' }}
+    </button>
+
+    <p>Pas encore de compte ? <a routerLink="/inscription">Creer un compte</a></p>
+    <div class="demo-box">Demo : client@lensrock.be / Client123!</div>
+  </form>
+</main>

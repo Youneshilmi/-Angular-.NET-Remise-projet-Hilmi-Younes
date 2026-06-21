@@ -1,0 +1,29 @@
+<header class="site-header">
+  <a class="brand" routerLink="/">Lensrock</a>
+
+  <nav>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Catalogue</a>
+    @if (auth.isAuthenticated()) {
+      <a routerLink="/mes-commandes" routerLinkActive="active">Mes commandes</a>
+    }
+    @if (auth.isAdmin()) {
+      <a routerLink="/administration" routerLinkActive="active">Administration</a>
+    }
+  </nav>
+
+  <div class="header-actions">
+    @if (auth.isAuthenticated()) {
+      <a class="cart-link" routerLink="/panier">Panier ({{ cart.count() }})</a>
+      <button class="header-button" type="button" (click)="logout()">Deconnexion</button>
+    } @else {
+      <a class="header-button" routerLink="/connexion">Connexion</a>
+      <a class="header-button filled" routerLink="/inscription">Inscription</a>
+    }
+  </div>
+</header>
+
+<router-outlet />
+
+<footer class="site-footer">
+  <p>Lensrock - projet scolaire Angular + ASP.NET Core</p>
+</footer>

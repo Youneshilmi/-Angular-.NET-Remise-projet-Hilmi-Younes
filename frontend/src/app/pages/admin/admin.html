@@ -1,0 +1,107 @@
+<main>
+  <h1>Administration</h1>
+
+  @if (summary(); as data) {
+    <section class="stat-grid">
+      <article class="card">
+        <span>Utilisateurs</span>
+        <strong>{{ data.userCount }}</strong>
+      </article>
+      <article class="card">
+        <span>Services actifs</span>
+        <strong>{{ data.activeServiceCount }}</strong>
+      </article>
+      <article class="card">
+        <span>Commandes</span>
+        <strong>{{ data.orderCount }}</strong>
+      </article>
+      <article class="card">
+        <span>Revenu</span>
+        <strong>{{ data.revenue }} euros</strong>
+      </article>
+    </section>
+  }
+
+  <section class="admin-grid">
+    <form class="panel" [formGroup]="form" (ngSubmit)="save()">
+      <h2>{{ editingId() ? 'Modifier un service' : 'Ajouter un service' }}</h2>
+
+      @if (message()) {
+        <div class="notice">{{ message() }}</div>
+      }
+
+      <label>
+        Categorie
+        <select formControlName="categoryId">
+          <option [ngValue]="0">Choisir...</option>
+          @for (category of categories(); track category.id) {
+            <option [ngValue]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </label>
+
+      <label>Nom<input formControlName="name"></label>
+      <label>Description<textarea rows="3" formControlName="description"></textarea></label>
+      <label>Duree en minutes<input type="number" formControlName="durationMinutes"></label>
+      <label>Prix<input type="number" step="0.01" formControlName="price"></label>
+      <label>Image URL<input formControlName="imageUrl"></label>
+      <label><input type="checkbox" formControlName="isActive"> Service actif</label>
+
+      <button type="submit" [disabled]="form.invalid">
+        {{ editingId() ? 'Enregistrer' : 'Creer' }}
+      </button>
+      @if (editingId()) {
+        <button class="button ghost" type="button" (click)="cancelEdit()">Annuler</button>
+      }
+    </form>
+
+    <section class="panel">
+      <h2>Services</h2>
+      <table>
+        <thead>
+          <tr><th>Nom</th><th>Prix</th><th>Etat</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          @for (service of services(); track service.id) {
+            <tr>
+              <td>{{ service.name }}</td>
+              <td>{{ service.price }} euros</td>
+              <td>{{ service.isActive ? 'Actif' : 'Inactif' }}</td>
+              <td>
+                <button type="button" (click)="edit(service)">Modifier</button>
+                <button type="button" (click)="deleteService(service.id)">Desactiver</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+  <section class="panel">
+    <h2>Commandes</h2>
+    <table>
+      <thead>
+        <tr><th>Client</th><th>Date</th><th>Total</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        @for (order of orders(); track order.id) {
+          <tr>
+            <td>{{ order.customerName }}</td>
+            <td>{{ order.bookingDate.slice(0, 10) }}</td>
+            <td>{{ order.totalAmount }} euros</td>
+            <td>
+              <select [value]="order.status" (change)="updateStatus(order, $event)">
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Paid">Paid</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</main>

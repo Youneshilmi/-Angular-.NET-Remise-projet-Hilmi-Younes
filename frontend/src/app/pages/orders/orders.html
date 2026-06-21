@@ -1,0 +1,33 @@
+<main>
+  <h1>Mes commandes</h1>
+
+  @if (loading()) {
+    <div class="empty-state">Chargement...</div>
+  } @else if (orders().length === 0) {
+    <section class="empty-state">
+      <h2>Aucune commande</h2>
+      <a class="button" routerLink="/">Voir le catalogue</a>
+    </section>
+  } @else {
+    @for (order of orders(); track order.id) {
+      <article class="order-card">
+        <h2>Commande #{{ order.id }}</h2>
+        <p>Date reservee : {{ order.bookingDate.slice(0, 10) }}</p>
+        <p>Statut : <span class="status">{{ order.status }}</span></p>
+
+        @for (item of order.items; track item.id) {
+          <div class="order-line">
+            <span>{{ item.quantity }} x {{ item.serviceName }}</span>
+            <strong>{{ item.unitPrice * item.quantity }} euros</strong>
+          </div>
+        }
+
+        @if (order.notes) {
+          <p>Notes : {{ order.notes }}</p>
+        }
+
+        <p>Total : <strong>{{ order.totalAmount }} euros</strong></p>
+      </article>
+    }
+  }
+</main>
